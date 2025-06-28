@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 認証が必須の共通関数
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // ユーザーのorganizationIdを取得する関数
+    function getUserOrganizationId() {
+      return request.auth.token.organizationId;
+    }
+    
+    // 指定されたorganizationIdがユーザーのorganizationIdと一致するかチェックする関数
+    function isOwnOrganization(organizationId) {
+      return isAuthenticated() && getUserOrganizationId() == organizationId;
+    }
+
+    // === 最優先: organizationsコレクション関連のルール ===
+    
+    // organizationドキュメント自体へのアクセス
+    match /organizations/{organizationId} {
+      allow read, write: if isOwnOrganization(organizationId);
+    }
+
+    // organizationsコレクション配下のサブコレクション・ドキュメント
+    match /organizations/{organizationId}/{document=**} {
+      allow read, write: if isOwnOrganization(organizationId);
+    }
+    
+    // === adminUsersコレクション専用ルール ===
+    
+    // adminUsersコレクション - organizationIdが一致するdocのみ取得可能
+    match /adminUsers/{userId} {
+      allow read, write: if isAuthenticated() && 
+        (resource.data.organizationId == getUserOrganizationId() ||
+         request.data.organizationId == getUserOrganizationId());
+    }
+    
+    // === その他のコレクション用汎用ルール ===
+    
+    // その他のドキュメントでorganizationIdが一致する場合のアクセス許可
+    match /{collection}/{document} {
+      allow read, write: if isAuthenticated() && 
+        (resource.data.organizationId == getUserOrganizationId() ||
+         request.data.organizationId == getUserOrganizationId());
+    }
+    
+    // サブコレクションを含む全ての深いパスでorganizationIdが一致する場合のアクセス許可
+    match /{collection}/{document}/{subcollection=**} {
+      allow read, write: if isAuthenticated() && 
+        get(/databases/$(database)/documents/$(collection)/$(document)).data.organizationId == getUserOrganizationId();
+    }
+    
+    // === フォールバック: 全てを拒否 ===
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

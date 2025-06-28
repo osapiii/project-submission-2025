@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>部品明細書</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 15mm;
+      }
+      body {
+        font-family: "Hiragino Sans", "Meiryo", sans-serif;
+        font-size: 9pt;
+        color: #333;
+        line-height: 1.4;
+      }
+      .container {
+        width: 100%;
+      }
+      .title {
+        font-size: 20pt;
+        text-align: center;
+        letter-spacing: 0.3em;
+        padding-bottom: 8px;
+        border-bottom: 3px double #000;
+        margin-bottom: 15px;
+      }
+      .header-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+        font-size: 9pt;
+      }
+      .doc-meta {
+        text-align: right;
+      }
+      .doc-meta p {
+        margin: 2px 0;
+      }
+      .company-info {
+        text-align: left;
+      }
+      .company-info p {
+        margin: 2px 0;
+      }
+      .product-section {
+        margin-bottom: 25px;
+        page-break-inside: avoid;
+      }
+      .product-header {
+        background-color: #f0f0f0;
+        padding: 8px 12px;
+        border: 2px solid #333;
+        font-weight: bold;
+        font-size: 11pt;
+        margin-bottom: 10px;
+      }
+      .product-summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+        padding: 8px;
+        background-color: #fafafa;
+        border: 1px solid #ddd;
+      }
+      .summary-item {
+        text-align: center;
+      }
+      .summary-label {
+        font-weight: bold;
+        font-size: 8pt;
+        color: #666;
+        margin-bottom: 3px;
+      }
+      .summary-value {
+        font-size: 10pt;
+        font-weight: bold;
+      }
+      .parts-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #333;
+        margin-bottom: 15px;
+      }
+      .parts-table th {
+        background-color: #e8e8e8;
+        border: 1px solid #333;
+        padding: 6px 4px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 8pt;
+      }
+      .parts-table td {
+        border: 1px solid #333;
+        padding: 5px 4px;
+        font-size: 8pt;
+      }
+      .parts-table .col-category {
+        width: 12%;
+        text-align: center;
+      }
+      .parts-table .col-name {
+        width: 20%;
+      }
+      .parts-table .col-description {
+        width: 25%;
+      }
+      .parts-table .col-material {
+        width: 10%;
+        text-align: center;
+      }
+      .parts-table .col-quantity {
+        width: 8%;
+        text-align: center;
+      }
+      .parts-table .col-unit-price {
+        width: 12%;
+        text-align: right;
+      }
+      .parts-table .col-total-price {
+        width: 13%;
+        text-align: right;
+      }
+      .category-metal {
+        background-color: #ffe6cc;
+      }
+      .category-resin {
+        background-color: #e6f3ff;
+      }
+      .category-electronic {
+        background-color: #f0ffe6;
+      }
+      .category-other {
+        background-color: #f5f5f5;
+      }
+      .total-row {
+        background-color: #f0f0f0;
+        font-weight: bold;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+      .footer-info {
+        margin-top: 20px;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+        font-size: 8pt;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">部品明細書</h1>
+
+      <div class="header-info">
+        <div class="company-info">
+          <p><strong>発行者：</strong>{{ issuer.name }}</p>
+          <p>{{ issuer.address }}</p>
+          <p>電話：{{ issuer.tel }} / E-mail：{{ issuer.email }}</p>
+        </div>
+        <div class="doc-meta">
+          <p><strong>発行日：</strong>{{ issue_date }}</p>
+          <p><strong>文書番号：</strong>{{ document_number }}</p>
+          <p><strong>関連見積書：</strong>{{ quote_number }}</p>
+        </div>
+      </div>
+
+      <!-- 各製品の部品明細 -->
+      {% for product in products %}
+      <div class="product-section {% if not loop.first %}page-break{% endif %}">
+        <div class="product-header">
+          {{ product.product_name }} - 部品構成明細
+        </div>
+
+        <div class="product-summary">
+          <div class="summary-item">
+            <div class="summary-label">製品数量</div>
+            <div class="summary-value">{{ product.product_quantity }}個</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">部品総数</div>
+            <div class="summary-value">{{ product.parts | length }}種類</div>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">総部品数量</div>
+            <div class="summary-value">{{ product.total_quantity }}個</div>
+          </div>
+        </div>
+
+        <table class="parts-table">
+          <thead>
+            <tr>
+              <th class="col-category">カテゴリ</th>
+              <th class="col-name">部品名</th>
+              <th class="col-description">説明</th>
+              <th class="col-material">材質</th>
+              <th class="col-quantity">数量</th>
+              <th class="col-unit-price">単価(円)</th>
+              <th class="col-total-price">合計金額(円)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for part in product.parts %}
+            <tr
+              class="category-{{ part.category | replace('金属部品', 'metal') | replace('樹脂部品', 'resin') | replace('電子部品', 'electronic') | replace('その他', 'other') }}"
+            >
+              <td class="col-category">{{ part.category }}</td>
+              <td class="col-name">{{ part.part_name }}</td>
+              <td class="col-description">{{ part.part_description }}</td>
+              <td class="col-material">{{ part.material }}</td>
+              <td class="col-quantity">{{ part.total_quantity }}</td>
+              <td class="col-unit-price">
+                ¥{{ part.estimated_unit_price | currency }}
+              </td>
+              <td class="col-total-price">
+                ¥{{ part.total_price | currency }}
+              </td>
+            </tr>
+            {% endfor %}
+
+            <!-- 製品合計行 -->
+            <tr class="total-row">
+              <td colspan="6" style="text-align: center">
+                {{ product.product_name }} 合計
+              </td>
+              <td class="col-total-price">
+                ¥{{ product.total_price | currency }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {% endfor %}
+
+      <div class="footer-info">
+        <p><strong>注意事項：</strong></p>
+        <p>・本明細書は社内参照用資料です。</p>
+        <p>・価格は{{ price_source }}による推定値です。</p>
+        <p>・実際の調達価格は市場状況により変動する可能性があります。</p>
+        <p>・部品仕様は設計変更により変更される場合があります。</p>
+      </div>
+    </div>
+  </body>
+</html>

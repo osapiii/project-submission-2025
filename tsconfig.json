@@ -1,0 +1,41 @@
+{
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@models/*": ["types/models/*"],
+      "@utils/*": ["utils/*"],
+      "@stores/*": ["stores/*"],
+      "@pages/*": ["pages/*"],
+      "@components/*": ["components/*"],
+      "@assets/*": ["assets/*"]
+    },
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noImplicitThis": true,
+    "types": ["@nuxt/image", "@vueuse/core", "@pinia/nuxt"],
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["es2022", "dom"]
+  },
+  "vueCompilerOptions": {
+    "target": 3,
+    "strictTemplates": true
+  },
+  "include": [
+    ".nuxt/nuxt.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.vue",
+    "types/models/prouductionPlants"
+  ]
+}

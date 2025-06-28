@@ -1,0 +1,11 @@
+Flask>=2.0.0
+gunicorn>=20.0.0
+google-cloud-storage>=2.0.0
+pdf2image>=1.16.3
+Pillow>=10.0.0
+python-dotenv>=1.0.0
+# 新規追加: 見積書生成用パッケージ
+google-generativeai>=0.3.0
+Jinja2>=3.0.0
+pdfkit>=1.0.0
+# LibreOfficeはOSパッケージとしてDockerfileでインストールするのでここには不要

@@ -1,0 +1,125 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+title: zodによる動的型付けの導入
+description: 本ドキュメントではzodによる動的型付けについて説明しています
+---
+### 開発におけるルール・制約
+- Firestoreは必ず `Zod with TypeConverter` 導入とセットで使用すること
+- Convererを引き回しつつ、Firestoreへの書き込み(読み込み)が発生するObjectについては、必ずModelを用意する運用とする
+
+### 期待する効果
+- バクの減少
+    - 誰でも好きなだけDBに値を登録できる状態 を防止 かつ 型定義に沿ったコーディングを可能にすることでバグ発生頻度を減らす
+- 開発速度の向上
+    - `コーディングに集中することで自動的にFirestoreも最適化される` 体験の提供による開発速度UP
+- セキュリティルールの堅牢性向上
+    - バリデーション条件がそのままセキュリティルールに適用されるので安定性がUPする
+
+### 受け入れるデメリット
+- 他Firestoreラッパーの情報キャッチアップ
+- Firestore以外のNoSQLもしくは、通常のRDBデータベースを用いたアプリケーション開発におけるノウハウの蓄積
+
+### 参考URL / 書籍
+[Zod + Firestore で楽に使える汎用Converter : 型付けとジェネリクスの魔法 #GameWith #TechWith #Zod #Firestore - GameWith Developer Blog](https://tech.gamewith.co.jp/entry/2023/12/05/115148)
+
+[0-1. はじめに｜逆引き 型ファースト Zod](https://zenn.dev/terrierscript/books/2023-01-typed-zod/viewer/0-1-introduction)
+
+[FirestoreDataConverter | JavaScript SDK  |  Firebase JavaScript API reference](https://firebase.google.com/docs/reference/js/v8/firebase.firestore.FirestoreDataConverter)
+
+### 詳解 / リファレンス実装 (Vue SFC)
+- **汎用TypeConverterのコード**
+    - 型を1つしか渡せないので、`from`にフル定義を置いて、`to` は Partial<T>で表現
+    - `to` では、id/createdAt/updatedAtは 受け渡し時のCoverterでは不要とする
+        - `createdAt` と `upatedAt` → to で書き込み時に自動で付与する
+        - `id` → `from` で読み込む時にDocに付与するようにする
+
+```tsx
+import log from "@utils/logger";
+import {
+  Timestamp,
+  type FirestoreDataConverter,
+  type QueryDocumentSnapshot,
+} from "firebase/firestore";
+
+import type { z } from "zod";
+
+export const firestoreTypeConverter = <T extends z.AnyZodObject>(
+  schema: T
+): FirestoreDataConverter<z.infer<T>> => ({
+  toFirestore: (data: Partial<z.infer<T>>): z.infer<T> => {
+    log("INFO", "conveter toFirestore🤖", "parsedDocData is....", data);
+    let additionalData = {};
+
+    if (!data.createdAt) {
+      // 新規作成時はcreatedAtとupdatedAtに現在のタイムスタンプを設定
+      additionalData = {
+        createdAt: Timestamp.fromDate(new Date()),
+        updatedAt: Timestamp.fromDate(new Date()),
+      };
+    } else {
+      // 更新時はupdatedAtのみ現在のタイムスタンプを設定
+      additionalData = {
+        updatedAt: Timestamp.fromDate(new Date()),
+      };
+    }
+    const mergedDoc = { ...data, ...additionalData };
+    // 書き込み時はidを持たないのでスキーマから除外
+    const withoutIdSchema = schema.omit({
+      id: true,
+    });
+    const parsedDocData = withoutIdSchema.strict().parse(mergedDoc);
+    return parsedDocData;
+  },
+  fromFirestore: (snapshot: QueryDocumentSnapshot<z.infer<T>>): z.infer<T> => {
+    const parsedDocData = snapshot.data();
+    log(
+      "INFO",
+      "conveter fromFirestore🤖",
+      "parsedDocData is....",
+      parsedDocData
+    );
+    const dataWithId = { ...parsedDocData, id: snapshot.id };
+    const validatedDocData = schema.strict().parse(dataWithId);
+    return validatedDocData;
+  },
+});
+```
+- **モデル毎のTypeコード**
+    - Convererを引き回しつつ、Firestoreへの書き込み(読み込み)が発生するObjectについては、必ずModelを用意する運用とする
+        - modelファイルは以下3つを返却する
+            1. id/createdAt/updatedAtを付与した、fromから受け取るときのzod.object
+            2. 1を型化したType
+            3. 1を引き渡して生成した対象Model専用のTypeConverter
+
+```tsx
+import { z } from "zod";
+import { firestoreTypeConverter } from "./firestoreTypeConverter";
+import { Timestamp } from "firebase/firestore";
+
+// スキーマを定義
+export const organizationSchema = z.object({
+  name: z.string(),
+  code: z.string(),
+});
+
+// id, createdAt, updatedAtの3つのフィールドを追加した新しいスキーマを定義
+export const decodedOrganizationSchema = organizationSchema.extend({
+  id: z.string(),
+  createdAt: z.instanceof(Timestamp),
+  updatedAt: z.instanceof(Timestamp),
+});
+
+// スキーマをもとに型を作成
+export type decodedOrganizationSchema = z.infer<
+  typeof decodedOrganizationSchema
+>;
+
+// FirestoreのTypeConverterを作成
+export const organizationConverter = firestoreTypeConverter(
+  decodedOrganizationSchema
+);
+```

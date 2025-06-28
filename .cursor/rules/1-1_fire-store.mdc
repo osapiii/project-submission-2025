@@ -1,0 +1,42 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+---
+title: Firebase開発ガイドライン
+description: Firebaseを活用した開発ルールと期待される効果
+---
+
+### 開発におけるルール・制約
+- 弊社では、BaaSとしてFirebaseを全面的に採用し、アプリケーションの個々の機能を以下の提供サービスを使用します。
+    - 認証・認可 ⇨ [Firebase Authentication](mdc:https:/firebase.google.com/docs/auth?hl=ja)
+    
+    [Firebase Authentication](mdc:https:/firebase.google.com/docs/auth?hl=ja)
+    
+    - データストア ⇨ [Firestore](mdc:https:/firebase.google.com/docs/firestore?hl=ja)
+    
+    [Firestore  |  Firebase](mdc:https:/firebase.google.com/docs/firestore?hl=ja)
+    
+    - アプリバックエンド ⇨ [Firebase Function](mdc:https:/firebase.google.com/docs/functions?hl=ja)
+    
+    [Cloud Functions for Firebase](mdc:https:/firebase.google.com/docs/functions?hl=ja)
+    
+- Firestoreを採用する際には、zod及び Converter導入による方安全性確保も必ずセットで導入することとします。こちらには例外は許容しません
+- 但し、Nuxt3の使用による実装が明らかに困難 もしくは非合理であるケースにおいては、別のアーキテクチャを採用することが認められます
+
+### 期待する効果
+- 総じて開発生産性向上・取り返しのつきやすいシステムの構築・技術統一によるナレッジの蓄積を達成
+    - **共通** ⇨ Firebase Emulatorにより開発者個人が自由にスクラップ&ビルド可能な安全な環境を提供▶︎開発スピードUP
+    - **Authentication** ⇨ メアド・パスワードログイン + Google/MicrosoftでのSSO対応に十分に対応可能
+    - **Firestore** ⇨ NoSQLによりスキーマ検討・DB構築タスクが不要になる /  弱点でもある過度な自由度をFireschemaにより制限 & 型安全な開発を実施
+    - **CloudFunction** ⇨ コマンド責務分離による分かりやすい統一化されたリクエストI/F
+- スケーラビリティについて、一切考慮する必要がない環境を恒常的に担保する事で、生産性改善を達成する
+
+### 受け入れるデメリット
+- 他BaaSへの技術キャッチアップの遅れ
+- 堅牢なRDBスキーマを前提とした、いわゆる "(一見)ちゃんとしたシステム"の構築実績や社内ナレッジの蓄積
+
+### 参考URL / 書籍
+[Zod + Firestore で楽に使える汎用Converter : 型付けとジェネリクスの魔法 #GameWith #TechWith #Zod #Firestore - GameWith Developer Blog](mdc:https:/tech.gamewith.co.jp/entry/2023/12/05/115148)

@@ -1,0 +1,71 @@
+# 環境設定
+.env
+.env.*
+
+# 認証・機密情報
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!firebase.json
+!firestore.indexes.json
+*.key
+*.crt
+*.csr
+*.pem
+auth.json
+key.json
+credentials.json
+service-account*.json
+.output/
+
+# Python関連
+.output
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+credential/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+.DS_Store
+lib64/
+parts/
+sdist/
+var/
+.nuxt
+*.egg-info/
+.installed.cfg
+*.egg
+.DS_Store
+*/.DS_Store
+
+# ライブラリ
+node_modules/
+
+# ログファイル
+*.log
+
+# エディタ設定
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# パッケージ群
+node_modules*
+
+# dumps
+dumps/
+
+# Large files
+sandbox/google_profile.zip

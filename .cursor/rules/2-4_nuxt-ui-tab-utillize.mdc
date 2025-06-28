@@ -1,0 +1,73 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+title: NuxtUIのタブの実装ルール
+description: NuxtUIのタブの実装ルール
+---
+
+### ルール・制約
+- 実装上画面数はなるべく少ない圧縮して、 `UTabs` の積極的使用でメニュー切り替えを多用することで、使いやすいUXを実現する
+
+### 期待する効果
+- UXの向上
+
+### 受け入れるデメリット
+- 特になし
+
+### 例外
+- Tab使用が必要の無いシンプルな構造の場合は、単一のコンテンツのみで完結させます
+
+### リファレンス実装
+- 通常のUTabs使用パターン
+
+```jsx
+<template>
+  <div>
+    <!-- タブのコンテンツ -->
+    <UTabs :items="masterSetTabItems" class="w-full">
+      <template #gSheet="{ item }" class="w-[100%]">
+        <GSheetConnectionConfig />
+      </template>
+      <template #customTag="{ item }" class="w-[100%]">
+        <!-- 出荷イベントの設定 -->
+        <InventoryPlanCustomTagConfig />
+        <!-- 生産イベントの設定 -->
+        <ProductionPlanCustomTagConfig />
+        <!-- 　原料追加イベントの設定 -->
+        <MaterialAddPlanCustomTagConfig />
+      </template>
+    </UTabs>
+  </div>
+</template>
+
+<script setup lang="ts">
+//#region import
+//#endregion import
+
+//#region store
+//#endregion store
+
+//#region ui-config
+const masterSetTabItems = [
+  {
+    label: "Gシート連携",
+    slot: "gSheet",
+  },
+  {
+    label: "分析用タグ",
+    slot: "customTag",
+  },
+];
+//#endregion ui-config
+
+//#region method
+//#endregion method
+</script>
+
+<style scoped>
+/* 必要に応じてスタイルを追加 */
+</style>
+```

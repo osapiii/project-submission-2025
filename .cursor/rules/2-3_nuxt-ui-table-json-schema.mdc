@@ -1,0 +1,105 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+title: NuxtUIのテーブルスキーマの実装ルール
+description: NuxtUIのテーブルスキーマの実装ルール
+---
+
+### ルール・制約
+- NuxtUIの `UTables` のスキーマはJSON Schemaで管理を行い、各利用先のComponentから呼び出し可能な設計にする。
+
+### 期待する効果
+- 静的ファイルとして管理をすることで、フォーム/テーブル定義を一元化→コードがまとまって編集しやすくなる
+- 各Component内での、Table/Form定義部分がなくなりスッキリとした記述になる
+- 特にQlavisにおいては、VueFlow ⇒ vueFormスキーマの変換をスムーズにすることで、実装がシンプルになる(`予定 4/22`)
+
+### 例外
+- 動的に `UTable` スキーマを生成する必要がある場合は、ベースのスキーマをJSONファイルから抽出した後で、Component内で必要な列を追加します
+
+### リファレンス実装
+- Component内で `UTable` を呼び出す実装
+```jsx
+  <UTable
+    :rows="logicConfig.convertedDiagnosisFlow.flow"
+    :columns="diagnosisCreateModalDiagnosisFlowModal"
+  >
+    <!-- タイプ -->
+    <template #type-data="{ row }">
+      <div v-if="row.type == 'entry'">開始点</div>
+      <div v-if="row.type == 'section'">セクション</div>
+      <div v-if="row.type == 'questionnaire'">設問</div>
+    </template>
+    <!-- タイトル -->
+    <template #title-data="{ row }"> {{ row.data.main }} </template>
+    <!-- 選択肢 -->
+    <template #choices-data="{ row }">
+      <div v-if="row.type != 'questionnaire'">-</div>
+      <div v-if="row.type == 'questionnaire'">
+        <template
+          v-for="choice in row.data.questionnaireChoices"
+          :key="choice"
+        >
+          <UBadge variant="outline" class="mr-1">
+            {{ choice }}
+          </UBadge>
+        </template>
+      </div>
+    </template>
+  </UTable>
+```
+
+- TableSchemaの定義
+
+```jsx
+export const useTableSchema = () => {
+  const tableSchema = {
+    "admin-logics": {
+      columns: [
+        {
+          accessorKey: "id",
+          header: "id",
+          sortable: true,
+        },
+        {
+          accessorKey: "name",
+          header: "名称",
+          sortable: true,
+        },
+        {
+          accessorKey: "description",
+          header: "説明",
+          sortable: true,
+        },
+        {
+          accessorKey: "status",
+          header: "ステータス",
+          sortable: true,
+        },
+      ],
+    },
+    "admin-shipping-event-list": {
+      columns: [
+        {
+          accessorKey: "start",
+          header: "出荷日",
+          sortable: true,
+        },
+        {
+          accessorKey: "productInfo",
+          header: "商品名",
+          sortable: true,
+        },
+        {
+          accessorKey: "quantity",
+          header: "数量",
+          sortable: true,
+        },
+      ],
+	    }
+	  ]
+	}
+}
+```

@@ -1,0 +1,45 @@
+POST https://create-estimation-document-208707381956.us-central1.run.app/create-estimate-document  HTTP/1.1
+content-type: application/json
+
+{
+    "estimateData": {
+        "totalPrice": 150000,
+        "products": [
+            {"productName": "Type C-2 ロータイプディスプレイ什器", "quantity": 10, "price": 15000}
+        ]
+    },
+    "partsBreakdown": [
+        {
+            "product_name": "Type C-2 ロータイプディスプレイ什器",
+            "product_quantity": 10,
+            "total_quantity": 20,
+            "total_price": 50000,
+            "parts": [
+                {
+                    "category": "金属部品",
+                    "part_name": "フレーム",
+                    "part_description": "本体フレーム（スチール製）",
+                    "material": "スチール",
+                    "unit_quantity": 1,
+                    "total_quantity": 10,
+                    "estimated_unit_price": 2000,
+                    "total_price": 20000,
+                    "price_source": "gemini_estimated"
+                },
+                {
+                    "category": "樹脂部品",
+                    "part_name": "背面パネル",
+                    "part_description": "背面パネル（木製）",
+                    "material": "木材",
+                    "unit_quantity": 1,
+                    "total_quantity": 10,
+                    "estimated_unit_price": 3000,
+                    "total_price": 30000,
+                    "price_source": "gemini_estimated"
+                }
+            ]
+        }
+    ],
+    "bucket_name": "knockai-106a4.firebasestorage.app",
+    "parentFolderPath": "test_documents/project_001"
+}

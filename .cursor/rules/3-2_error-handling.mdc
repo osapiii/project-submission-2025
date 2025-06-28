@@ -1,0 +1,21 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+title: エラーハンドリング
+description: エラーハンドリングの実装ルール
+---
+
+### 開発におけるルール・制約
+- エラーの表示ダイアログは汎用的なUIコンポーネントを使用し、全体で見た目を共有する
+- Componentは以下2つのいずれかの方法でエラーを受け取り、適切にUIをハンドリングしなくてはならない。また、Component側での `try~catch` を実質強制する②ではなくて、原則①で全てのエラー処理を完結させる
+    - 子コンポーネントから受け取る NuxtエラーをBoundaryでキャッチして、Globalなエラーモーダルを表示する
+- 上記に含まれないエラーについては、Fatal = trueとして、エラー画面に遷移させる
+
+[Error Handling · Get Started with Nuxt](mdc:https:/nuxt.com/docs/getting-started/error-handling)
+
+### 期待する効果
+- ユーザーに取ってわかりやすいエラー画面を提供することでUIを改善する
+- 異常系処理のポリシーを統一することで開発効率を向上する

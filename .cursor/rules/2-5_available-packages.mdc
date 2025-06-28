@@ -1,0 +1,115 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+title: 使用可能なパッケージ
+description: 使用可能なパッケージの一覧
+---
+
+### 開発におけるルール・制約
+- 使用するライブラリ( 及び パッケージ) は本ProjectRuleに記載のあるもののみに限定します。
+- 記載の無いライブラリを新規に利用する/したい場合は、都度タスクをストップして以下の情報を踏まえて提案してください
+    1. 実施したい処理の詳細
+    2. 既存のライブラリを組み合わせることで、当該仕様を満たせない理由の詳細
+    3. 新規導入予定ライブラリの詳細
+- なお、依存関係解消の都合で、自動的にDLされるライブラリについては管轄外とします。つまり明示的に `yarn install` を実行するライブラリ・パッケージが本ページ記載の内容です
+
+### 期待する効果
+- 無尽蔵に依存ライブラリが増加する事態を回避することで、プロジェクトの安定性を担保します
+
+### 受け入れるデメリット
+- 新規ライブラリ導入時の検討コストが発生しますが、許容します
+
+### ENOSTECH社で使用が許可されているライブラリ・パッケージの一覧
+| ライブラリ名称 | ライブラリの一般的な説明 | リポジトリURL | アプリケーション内での活用方針 |
+| --- | --- | --- | --- |
+| @dagrejs/dagre | JavaScriptグラフ描画ライブラリ | https://github.com/dagrejs/dagre | グラフ構造の整理に使用・VueFlowと組み合わせて使用します。 |
+| @datadog/browser-logs | Datadogブラウザログ収集ライブラリ | https://www.npmjs.com/package/@datadog/browser-logs | フロントエンドのエラーやログをDatadogに送信 |
+| @datadog/browser-rum | DatadogブラウザRUMライブラリ | https://www.npmjs.com/package/@datadog/browser-rum | フロントエンドのパフォーマンス監視に利用 |
+| @firebase/app-types | Firebaseアプリの型定義 | https://www.npmjs.com/package/@firebase/app-types | Firebase関連処理の型安全性を確保 |
+| @formkit/addons | FormKitの追加機能 | https://formkit.com/essentials/addons | FormKitの機能を拡張 |
+| @formkit/auto-animate | FormKitの自動アニメーション | https://formkit.com/plugins/auto-animate | フォームのUIをアニメーションで改善 |
+| @formkit/drag-and-drop | FormKitのドラッグアンドドロップ機能 | https://formkit.com/inputs/drag-and-drop | フォームでドラッグアンドドロップ操作を提供 |
+| @formkit/icons | FormKitのアイコン | https://formkit.com/essentials/icons | フォームにアイコンを追加 |
+| @formkit/nuxt | FormKitのNuxtモジュール | https://formkit.com/integrations/nuxt | Nuxt.jsでFormKitを利用 |
+| @formkit/pro | FormKitのPro版 | https://formkit.com/pro | FormKitのPro版機能を利用 |
+| @geoffcodesthings/tailwind-md-base | Tailwind CSSのベース設定 | 該当リポジトリが見つかりませんでした | Tailwind CSSのベース設定を適用 |
+| @mdx-js/mdx | MDXパーサー/コンパイラー | https://mdxjs.com/ | MarkdownファイルにJSXコンポーネントを埋め込む |
+| @nuxt/content | Nuxt.jsコンテンツモジュール | https://content.nuxtjs.org/ | MarkdownなどのコンテンツをNuxt.jsで管理 |
+| @nuxt/eslint | Nuxt.js ESLintモジュール | 該当リポジトリが見つかりませんでした | ESLintによるコードチェックをNuxt.jsに統合 |
+| @nuxt/image | Nuxt.js画像最適化モジュール | https://image.nuxtjs.org/ | 画像の最適化と配信を自動化 |
+| @nuxt/ui | Nuxt.js UIライブラリ | https://ui.nuxt.com/ | UIコンポーネントを提供 |
+| @nuxtjs/dotenv | Nuxt.js環境変数モジュール | https://github.com/nuxt-community/dotenv-module | .envファイルをNuxt.jsで利用 |
+| @nuxtjs/mdc | Nuxt.js MDCモジュール | 該当リポジトリが見つかりませんでした | MDCコンポーネントをNuxt.jsで利用 |
+| @pinia/nuxt | PiniaのNuxtモジュール | https://pinia.vuejs.org/ssr/nuxt.html | PiniaストアをNuxt.jsで利用 |
+| @preact/signals | Preactのシグナル | https://preactjs.com/guide/v10/signals | リアクティブな状態管理に利用 |
+| @rollup/plugin-commonjs | RollupのCommonJSプラグイン | https://github.com/rollup/plugins/tree/master/packages/commonjs | CommonJSモジュールをRollupで利用 |
+| @schedule-x/calendar | Schedule X カレンダーコンポーネント | https://schedule-x.dev/ | カレンダー表示機能を提供 |
+| @schedule-x/event-modal | Schedule X イベントモーダルコンポーネント | https://schedule-x.dev/ | イベントの詳細を表示するモーダルを提供 |
+| @schedule-x/theme-default | Schedule X デフォルトテーマ | https://schedule-x.dev/ | Schedule X のデフォルトテーマを適用 |
+| @schedule-x/vue | Schedule X Vueコンポーネント | https://schedule-x.dev/ | Vue.jsでSchedule Xを利用 |
+| @slack/oauth | Slack OAuthライブラリ | https://github.com/slackapi/node-slack-oauth | Slack認証を実装 |
+| @tailwindcss/container-queries | Tailwind CSSコンテナクエリプラグイン | https://github.com/tailwindlabs/tailwindcss-container-queries | コンテナクエリを利用 |
+| @tanstack/vue-virtual | TanStack Vue仮想化 | https://tanstack.com/virtual/v3 | 大量のデータを効率的に表示 |
+| @tato30/vue-pdf | Vue PDFビューア | https://github.com/Tato30/vue-pdf | PDFドキュメントをVue.jsで表示 |
+| @types/dagre | Dagreの型定義 | https://www.npmjs.com/package/@types/dagre | Dagreの型安全性を確保 |
+| @types/papaparse | PapaParseの型定義 | https://www.npmjs.com/package/@types/papaparse | PapaParseの型安全性を確保 |
+| @vitest/coverage-v8 | VitestのカバレッジV8 | https://vitest.dev/guide/coverage.html | Vitestでカバレッジを計測 |
+| @vue-flow/core | Vue Flowコア | https://vue-flow.dev/ | Vue Flowのコア機能を提供 |
+| @vueform/slider | Vueフォームスライダー | https://vueform.com/slider/ | スライダーUIを提供 |
+| @vuepic/vue-datepicker | Vue Datepicker | https://vue3datepicker.com/ | 日付選択UIを提供 |
+| @vueup/vue-quill | Vue Quillエディタ | https://github.com/vueup/vue-quill | リッチテキストエディタを提供 |
+| @vueuse/core | VueUseコア | https://vueuse.org/ | Vue.jsのユーティリティ関数を提供 |
+| @vueuse/nuxt | VueUseのNuxtモジュール | https://vueuse.org/guide/integration/nuxt.html | VueUseをNuxt.jsで利用 |
+| clipboard | クリップボード操作ライブラリ | https://github.com/zenorocha/clipboard.js | クリップボードへのコピー機能を提供 |
+| csvtojson | CSV to JSONコンバーター | https://www.npmjs.com/package/csvtojson | CSVファイルをJSONに変換 |
+| dagre | JavaScriptグラフ描画ライブラリ | https://github.com/dagrejs/dagre | グラフ構造の可視化に利用 |
+| dom-to-image | DOM to Imageコンバーター | https://github.com/tsayen/dom-to-image | DOM要素を画像に変換 |
+| dotenv | 環境変数ライブラリ | https://github.com/motdotla/dotenv | .envファイルを読み込む |
+| echarts | EChartsグラフライブラリ | https://echarts.apache.org/ | 豊富な種類のグラフを提供 |
+| file-saver | FileSaver.js | https://github.com/eligrey/FileSaver.js | ファイルを保存 |
+| firebase | Firebase SDK | https://firebase.google.com/ | Firebaseの各種機能を利用 |
+| floating-vue | Floating Vue | https://floating-vue.starbeam.space/ | フローティングUIコンポーネントを提供 |
+| i | npm iコマンドのエイリアス | 該当リポジトリが見つかりませんでした | npm install のエイリアス |
+| jspdf | jsPDF | https://github.com/parallax/jsPDF | PDFドキュメントを生成 |
+| jszip | JSZip | https://stuk.github.io/jszip/ | ZIPファイルを生成・解凍 |
+| lodash | Lodashユーティリティライブラリ | https://lodash.com/ | 便利な関数を提供 |
+| markdown-it | Markdownパーサー | https://github.com/markdown-it/markdown-it | MarkdownファイルをHTMLに変換 |
+| markdown-it-link-attributes | Markdown-itリンク属性 | https://github.com/jonschlinkert/markdown-it-link-attributes | Markdownリンクに属性を追加 |
+| npm | npmパッケージマネージャ | https://www.npmjs.com/ | パッケージ管理 |
+| nprogress | NProgress | https://github.com/rstacruz/nprogress | プログレスバーを表示 |
+| nuxt | Nuxt.jsフレームワーク | https://nuxt.com/ | Vue.jsベースのフレームワーク |
+| nuxt-vuefire | Nuxt Vuefire | https://nuxt-vuefire.netlify.app/ | FirebaseをNuxt.jsで利用 |
+| open | Open | https://github.com/sindresorhus/open | ファイルやURLを開く |
+| papaparse | PapaParse | https://www.papaparse.com/ | CSVファイルを解析 |
+| pinia | Piniaストア | https://pinia.vuejs.org/ | Vue.jsの状態管理 |
+| preact | Preact | https://preactjs.com/ | 高速なUIライブラリ |
+| qrcode-vue3 | QRコードVue3 | https://github.com/FortAwesome/vue-fontawesome | QRコードを生成 |
+| rollup | Rollupモジュールバンドラー | https://rollupjs.org/ | JavaScriptモジュールをバンドル |
+| survey-core | SurveyJS Core | https://surveyjs.io/Documentation/Library?id=survey-library | アンケート機能を提供 |
+| survey-creator-core | SurveyJS Creator Core | https://surveyjs.io/Documentation/Survey-Creator?id=survey-creator-library | アンケート作成機能を提供 |
+| survey-creator-vue | SurveyJS Creator Vue | https://surveyjs.io/Documentation/Survey-Creator?id=survey-creator-library | Vue.jsでアンケート作成機能を提供 |
+| survey-vue3-ui | SurveyJS Vue3 UI | https://surveyjs.io/Documentation/Library?id=get-started-vue | Vue.jsでアンケートUIを提供 |
+| tailwind-config-viewer | Tailwind Config Viewer | https://github.com/rogden/tailwind-config-viewer | Tailwind CSSの設定を表示 |
+| tailwindcss | Tailwind CSSフレームワーク | https://tailwindcss.com/ | ユーティリティファーストCSSフレームワーク |
+| toolcool-range-slider | Toolcool Range Slider | https://toolcool.design/range-slider | レンジスライダーUIを提供 |
+| uuid | UUIDジェネレーター | https://github.com/uuidjs/uuid | UUIDを生成 |
+| vue | Vue.jsフレームワーク | https://vuejs.org/ | UI構築のためのJavaScriptフレームワーク |
+| vue-cal | Vue Cal | https://antoniandre.github.io/vue-cal/ | カレンダーコンポーネントを提供 |
+| vue-countup-v3 | Vue CountUp V3 | https://github.com/jefersonc/vue-countup-v3 | カウントアップアニメーションを提供 |
+| vue-echarts | Vue ECharts | https://github.com/ecomfe/vue-echarts | EChartsをVue.jsで利用 |
+| vue-email-editor | Vue Email Editor | https://github.com/ModyQureshi/vue-email-editor | メールエディタを提供 |
+| vue-json-csv | Vue JSON to CSV | https://github.com/xy2z/vue-json-csv | JSONデータをCSVに変換 |
+| vue-loaders | Vue Loaders | https://github.com/Safran-Engineering/vue-loaders | ローディングアニメーションを提供 |
+| vue-pdf-embed | Vue PDF Embed | https://github.com/FranckFreiburger/vue-pdf-embed | PDFドキュメントを埋め込む |
+| vue-router | Vue Router | https://router.vuejs.org/ | Vue.jsのルーティング |
+| vue-showdown | Vue Showdown | https://github.com/showdownjs/vue-showdown | MarkdownをVue.jsで表示 |
+| vue3-json-viewer | Vue3 JSON Viewer | https://github.com/chenhb23/vue3-json-viewer | JSONデータを表示 |
+| vue3-lottie | Vue3 Lottie | https://github.com/astriskov/vue3-lottie | LottieアニメーションをVue.jsで表示 |
+| vue3-ts-jsoneditor | Vue3 TS JSONEditor | https://github.com/zhuweiyou/vue3-ts-jsoneditor | JSONエディタを提供 |
+| vuefire | VueFire | https://vuefire.vuejs.org/ | FirebaseをVue.jsで利用 |
+| xlsx | XLSX | https://sheetjs.com/ | Excelファイルを読み書き |
+| yalps | Yalps | https://www.npmjs.com/package/yalps | ステート管理ライブラリ |
+| zod | Zod | https://zod.dev/ | TypeScriptのスキーマ検証ライブラリ |

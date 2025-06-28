@@ -1,0 +1,60 @@
+rules_version = '2';
+
+// Craft rules based on data in your Firestore database
+// allow write: if firestore.get(
+//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
+service firebase.storage {
+  match /b/{bucket}/o {
+    // 認証が必須の共通関数
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // ユーザーのorganizationIdを取得する関数
+    function getUserOrganizationId() {
+      return request.auth.token.organizationId;
+    }
+    
+    // ユーザーのorganizationCodeを取得する関数
+    function getUserOrganizationCode() {
+      return request.auth.token.organizationCode;
+    }
+    
+    // organizationId配下のファイルアクセス（例: organizations/{organizationId}/...）
+    match /organizations/{organizationId}/{allPaths=**} {
+      allow read, write: if isAuthenticated() && 
+        getUserOrganizationId() == organizationId;
+    }
+    
+    // organizationCode配下のファイルアクセス（例: {organizationCode}/...）
+    match /{organizationCode}/{allPaths=**} {
+      allow read, write: if isAuthenticated() && 
+        getUserOrganizationCode() == organizationCode;
+    }
+    
+    // blueprints配下でorganizationごとに分離されたファイル（例: blueprints/{organizationId}/...）
+    match /blueprints/{organizationId}/{allPaths=**} {
+      allow read, write: if isAuthenticated() && 
+        getUserOrganizationId() == organizationId;
+    }
+    
+    // uploads配下でorganizationごとに分離されたファイル（例: uploads/{organizationId}/...）
+    match /uploads/{organizationId}/{allPaths=**} {
+      allow read, write: if isAuthenticated() && 
+        getUserOrganizationId() == organizationId;
+    }
+    
+    // ユーザー個別のファイル（例: users/{userId}/...）
+    match /users/{userId}/{allPaths=**} {
+      allow read, write: if isAuthenticated() && 
+        (request.auth.uid == userId || 
+         // Firestoreから該当ユーザーのorganizationIdを参照して確認
+         firestore.get(/databases/(default)/documents/adminUsers/$(userId)).data.organizationId == getUserOrganizationId());
+    }
+    
+    // 全体のフォールバック - 明示的に拒否
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

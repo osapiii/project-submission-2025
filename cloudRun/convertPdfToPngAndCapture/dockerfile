@@ -1,0 +1,26 @@
+# 最新の公式軽量Pythonイメージを使用します
+FROM python:3.11-slim-buster
+
+# aptキャッシュをクリアするためのARGを設定 (セキュリティベストプラクティス)
+ARG DEBIAN_FRONTEND=noninteractive
+
+# 作業ディレクトリを設定します
+WORKDIR /app
+
+# PDFからPNGへの変換に必要な依存ライブラリと日本語フォントをインストールします
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # PDFからPNGへの変換に必要なpoppler-utils
+    poppler-utils
+
+# Pythonの依存関係をrequirements.txtからインストールします
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# アプリケーションコードをコンテナにコピーします
+COPY app.py .
+
+# Cloud Run がリッスンするデフォルトポートを公開します (8080)
+EXPOSE 8080
+
+# Cloud Run インスタンスの起動時に実行されるコマンドを指定します
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--worker-class", "gthread", "--threads", "4", "--timeout", "120", "app:app"]

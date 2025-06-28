@@ -1,0 +1,36 @@
+# 環境設定
+.env
+.env.*
+
+# Python関連
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ログファイル
+*.log
+
+# エディタ設定
+.idea/
+.vscode/
+*.swp
+*.swo

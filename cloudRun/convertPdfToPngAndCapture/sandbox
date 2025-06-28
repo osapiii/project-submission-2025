@@ -1,0 +1,8 @@
+POST https://convert-pdf-to-png-and-capture-208707381956.us-central1.run.app/convert-pdf-to-png  HTTP/1.1
+content-type: application/json
+
+{
+    "bucket_name": "knockai-106a4.firebasestorage.app",
+    "gcsInputPdfFilePath": "organizations/00aAPQpyPzqUntjAbSa8/blueprints/438c0732-2010-42a2-8ccf-0c6d0379189c/pdf/blueprint.pdf",
+    "gcsOutputPreviewPngFilePath": "organizations/00aAPQpyPzqUntjAbSa8/blueprints/438c0732-2010-42a2-8ccf-0c6d0379189c/pdf/capture.png"
+}

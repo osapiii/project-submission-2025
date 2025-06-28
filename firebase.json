@@ -1,0 +1,74 @@
+{
+  "hosting": {
+    "public": ".output/public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=1"
+          }
+        ]
+      }
+    ]
+  },
+
+  "functions": [
+    {
+      "source": "backend",
+      "codebase": "ui-backend",
+      "ignore": ["venv", ".git", "firebase-debug.log", "firebase-debug.*.log"]
+    }
+  ],
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "host": "0.0.0.0",
+      "port": 5001
+    },
+    "firestore": {
+      "host": "0.0.0.0",
+      "port": 8080
+    },
+    "ui": {
+      "host": "0.0.0.0",
+      "enabled": true,
+      "port": 4000
+    },
+    "storage": {
+      "host": "0.0.0.0",
+      "enabled": true,
+      "port": 9000
+    },
+    "logging": {
+      "host": "0.0.0.0",
+      "port": 4500
+    },
+    "hub": {
+      "host": "0.0.0.0",
+      "port": 4400
+    },
+    "eventarc": {
+      "host": "0.0.0.0",
+      "port": 9299
+    },
+    "singleProjectMode": true
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}

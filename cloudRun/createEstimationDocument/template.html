@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>見積書</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 20mm;
+      }
+      body {
+        font-family: "Hiragino Sans", "Meiryo", sans-serif;
+        font-size: 10pt;
+        color: #333;
+      }
+      .container {
+        width: 100%;
+      }
+      .title {
+        font-size: 22pt;
+        text-align: center;
+        letter-spacing: 0.5em; /* 文字間を広げる */
+        padding-bottom: 10px;
+        border-bottom: 4px double #000;
+        margin-bottom: 20px;
+      }
+      .header {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .client-info .company-name {
+        font-size: 14pt;
+        font-weight: bold;
+        border-bottom: 1px solid #000;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+      }
+      .client-info .contact-name {
+        font-size: 12pt;
+      }
+      .issuer-info {
+        text-align: left;
+      }
+      .issuer-info p {
+        margin: 2px 0;
+      }
+      .doc-meta {
+        text-align: right;
+        margin-bottom: 20px;
+      }
+      .greeting {
+        margin-bottom: 15px;
+      }
+      .summary-box {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        border: 1px solid #000;
+        margin-bottom: 10px;
+      }
+      .total-amount {
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-right: 1px solid #000;
+      }
+      .total-amount-label {
+        font-weight: bold;
+      }
+      .total-amount-value {
+        font-size: 16pt;
+        font-weight: bold;
+      }
+      .terms-box table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .terms-box td {
+        border: 1px solid #000;
+        padding: 5px;
+      }
+      .terms-box .label {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        text-align: center;
+        width: 80px;
+      }
+      .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #000;
+      }
+      .items-table th,
+      .items-table td {
+        border: 1px solid #000;
+        padding: 8px;
+      }
+      .items-table thead th {
+        background-color: #f2f2f2;
+        text-align: center;
+      }
+      .items-table .text-right {
+        text-align: right;
+      }
+      .items-table .col-name {
+        width: 45%;
+      }
+      .summary-row td {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+      .summary-label {
+        text-align: center;
+      }
+      .remarks-box {
+        margin-top: 20px;
+      }
+      .remarks-content {
+        border: 1px solid #000;
+        padding: 10px;
+        min-height: 80px;
+        white-space: pre-wrap; /* 改行を反映させる */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">見 積 書</h1>
+
+      <div class="header">
+        <div class="client-info">
+          <p>{{ client.zip_code }}</p>
+          <p>{{ client.address_line1 }}<br />{{ client.address_line2 }}</p>
+          <p class="company-name">{{ client.name }}</p>
+          <p class="contact-name">{{ client.contact_person }} 様</p>
+        </div>
+        <div class="issuer-info">
+          <div class="doc-meta">
+            <p>発行日： {{ issue_date }}</p>
+            <p>伝票番号： {{ quote_number }}</p>
+          </div>
+          <p>{{ issuer.name }}</p>
+          <p>{{ issuer.zip_code }}</p>
+          <p>{{ issuer.address }}</p>
+          <p>電話： {{ issuer.tel }}</p>
+          <p>E-mail： {{ issuer.email }}</p>
+        </div>
+      </div>
+
+      <p class="greeting">下記の通りお見積り申し上げます。</p>
+
+      <div class="summary-box">
+        <div class="total-amount">
+          <span class="total-amount-label">お見積金額</span>
+          <span class="total-amount-value"
+            >¥{{ calculations.total | currency }}</span
+          >
+        </div>
+        <div class="terms-box">
+          <table>
+            <tr>
+              <td class="label">支払条件</td>
+              <td>{{ payment_terms }}</td>
+            </tr>
+            <tr>
+              <td class="label">有効期限</td>
+              <td>{{ due_date }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th class="col-name">商品名</th>
+            <th>数量</th>
+            <th>単価</th>
+            <th>金額</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 明細行 -->
+          {% for item in items %}
+          <tr>
+            <td>{{ item.name }}</td>
+            <td class="text-right">{{ item.quantity }}</td>
+            <td class="text-right">{{ item.unit_price | currency }}</td>
+            <td class="text-right">{{ item.amount | currency }}</td>
+          </tr>
+          {% endfor %}
+
+          <!-- 空白行（テーブルの高さを一定に保つため） -->
+          {% for i in range(12 - items|length) %}
+          <tr>
+            <td> </td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          {% endfor %}
+
+          <!-- 合計欄 -->
+          <tr class="summary-row">
+            <td colspan="2" rowspan="3"></td>
+            <td class="summary-label">小計</td>
+            <td class="text-right">¥{{ calculations.subtotal | currency }}</td>
+          </tr>
+          <tr class="summary-row">
+            <td class="summary-label">消費税</td>
+            <td class="text-right">¥{{ calculations.tax | currency }}</td>
+          </tr>
+          <tr class="summary-row">
+            <td class="summary-label">合計金額</td>
+            <td class="text-right">¥{{ calculations.total | currency }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="remarks-box">
+        <strong>備考</strong>
+        <div class="remarks-content">{{ notes }}</div>
+      </div>
+    </div>
+  </body>
+</html>
